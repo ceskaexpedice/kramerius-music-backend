@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration[5.2]
+class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[5.2]
 
     def change
       

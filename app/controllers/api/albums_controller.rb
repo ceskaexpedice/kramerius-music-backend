@@ -2,7 +2,7 @@ class Api::AlbumsController < Api::ApiController
  
   def index
     results = []
-    Album.all.each do |album|
+    Album.all.order(title: :asc).each do |album|
       results.push to_response(album)
     end
     render json: results, status: :ok 

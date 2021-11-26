@@ -6,8 +6,7 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
   validates_uniqueness_of :email
 
-  has_many :scopes
-  has_many :scope_users, dependent: :destroy
+  has_many :playlists
 
   def has_role?(role)
      !self.roles.nil? && self.roles.split(",").include?(role)

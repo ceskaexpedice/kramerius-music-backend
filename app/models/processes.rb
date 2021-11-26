@@ -23,15 +23,47 @@ class Processes
             a = c.count > 0 ? c.first : Album.new
             a.pid = album['PID']
             a.title = album['dc.title']
-            a.genres = album['keywords'].nil? ? "" : album['keywords'].join(";;")
-            a.artists = album['dc.creator'].nil? ? "" : album['dc.creator'].join(";;")
+
+            genres = []
+            unless album['keywords'].nil? 
+                album['keywords'].each do |genre|
+                    if genre == "rocková hudba"
+                        genre = "rock"
+                    elsif !["populární hudbapopulární písně", "populární hudba", "populární písně"].index(genre).nil?
+                        genre = "pop"
+                    elsif !["country hudba", "country music"].index(genre).nil?
+                        genre = "country"
+                    end
+                    genre = genre.upcase_first
+                    genres.push(genre)
+                end
+            end
+            a.genres = genres.join(";;")
+
+            artists = []
+            unless album['dc.creator'].nil? 
+                album['dc.creator'].each do |artist|
+                    artist.gsub!(" (hudební skupina)", "")
+                    if !artist.index(", 1").nil?
+                        artist = artist[0, artist.index(", 1")]
+                    end
+                    artist.strip!
+                    if artist.scan(", ").count == 1 && artist.scan(" ").count <= 2
+                        artist = artist.split(", ").reverse.join(" ")
+                    end
+                    artist = artist.upcase_first
+                    artists.push(artist)
+                end
+            end
+            a.artists = artists.join(";;")
+
             a.date = album['datum_str']
             a.is_private = album['dostupnost'] == 'private'
             a.source = source
             a.save
             albumMap[a.pid] = a
         end
-
+        return
 
         url = "#{Processes.source_url(source)}/search/api/v5.0/search?q=*:*&fq=fedora.model:soundunit&fl=PID,dc.title&rows=3000&start=0"
         units = Processes.get(url)
@@ -91,6 +123,7 @@ class Processes
             if url.start_with? "https"
                 http.use_ssl = true 
                 http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+                # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
             end
             req =  Net::HTTP::Get.new(uri)
             req.add_field "Content-Type", "application/json; charset=utf-8"

@@ -7,6 +7,12 @@ Rails.application.routes.draw do
       resources :tracks, only: [:index]
     end
 
+    resources :playlists, only: [:index, :show, :create] do
+      member do
+        post 'tracks/:track_id', action: 'add_track'
+      end
+    end
+
     get 'search/tracks', to: 'tracks#search'
 
   end

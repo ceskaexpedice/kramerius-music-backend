@@ -63,7 +63,6 @@ class Processes
             a.save
             albumMap[a.pid] = a
         end
-        return
 
         url = "#{Processes.source_url(source)}/search/api/v5.0/search?q=*:*&fq=fedora.model:soundunit&fl=PID,dc.title&rows=3000&start=0"
         units = Processes.get(url)

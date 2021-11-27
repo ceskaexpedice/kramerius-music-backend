@@ -121,8 +121,8 @@ class Processes
             http = Net::HTTP.new(uri.host, uri.port)
             if url.start_with? "https"
                 http.use_ssl = true 
-                http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-                # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+                # http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+                http.verify_mode = OpenSSL::SSL::VERIFY_NONE
             end
             req =  Net::HTTP::Get.new(uri)
             req.add_field "Content-Type", "application/json; charset=utf-8"

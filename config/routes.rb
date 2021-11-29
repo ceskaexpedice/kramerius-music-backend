@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       resources :tracks, only: [:index]
     end
 
-    resources :playlists, only: [:index, :show, :create] do
+    resources :playlists, only: [:index, :show, :update, :create, :destroy] do
       member do
         post 'tracks/:track_id', action: 'add_track'
       end

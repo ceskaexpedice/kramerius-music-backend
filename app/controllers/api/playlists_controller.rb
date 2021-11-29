@@ -21,6 +21,11 @@ class Api::PlaylistsController < Api::ApiController
     render json: to_response(playlist), status: :created
   end
 
+  def update
+    @playlist.update(playlist_params)
+    render json: to_response(@playlist), status: :ok
+  end
+
   def add_track
     track = Track.find_by(pid: params[:track_id])
     puts "@playlist.id #{@playlist.id}"
@@ -28,6 +33,11 @@ class Api::PlaylistsController < Api::ApiController
 
     PlaylistTrack.create(playlist_id: @playlist.id, track_id: track.id)
     render json: track_to_response(track), status: :created
+  end
+
+  def destroy
+    @playlist.destroy
+    render json: { message: "Ok" }, status: :ok
   end
 
   private

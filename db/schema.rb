@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_23_112212) do
+ActiveRecord::Schema.define(version: 2021_12_03_135317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,23 @@ ActiveRecord::Schema.define(version: 2021_11_23_112212) do
     t.string "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "albums_libraries", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "album_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id"], name: "index_albums_libraries_on_album_id"
+    t.index ["user_id"], name: "index_albums_libraries_on_user_id"
+  end
+
+  create_table "artists_libraries", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "artist"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_artists_libraries_on_user_id"
   end
 
   create_table "playlist_tracks", force: :cascade do |t|
@@ -89,6 +106,9 @@ ActiveRecord::Schema.define(version: 2021_11_23_112212) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "albums_libraries", "albums"
+  add_foreign_key "albums_libraries", "users"
+  add_foreign_key "artists_libraries", "users"
   add_foreign_key "playlist_tracks", "playlists"
   add_foreign_key "playlist_tracks", "tracks"
   add_foreign_key "playlists", "users"

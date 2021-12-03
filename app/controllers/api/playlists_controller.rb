@@ -28,11 +28,14 @@ class Api::PlaylistsController < Api::ApiController
 
   def add_track
     track = Track.find_by(pid: params[:track_id])
-    puts "@playlist.id #{@playlist.id}"
-    puts "track.id #{track.id}"
-
     PlaylistTrack.create(playlist_id: @playlist.id, track_id: track.id)
     render json: track_to_response(track), status: :created
+  end
+
+  def remove_track
+    track = Track.find_by(pid: params[:track_id])
+    PlaylistTrack.where(playlist_id: @playlist.id, track_id: track.id).destroy_all
+    render json: { message: "Ok" }, status: :created
   end
 
   def destroy

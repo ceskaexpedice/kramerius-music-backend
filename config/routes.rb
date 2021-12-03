@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :playlists, only: [:index, :show, :update, :create, :destroy] do
       member do
         post 'tracks/:track_id', action: 'add_track'
+        delete 'tracks/:track_id', action: 'remove_track'
       end
     end
 

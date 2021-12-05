@@ -28,8 +28,12 @@ class Api::PlaylistsController < Api::ApiController
 
   def add_track
     track = Track.find_by(pid: params[:track_id])
-    PlaylistTrack.create(playlist_id: @playlist.id, track_id: track.id)
-    render json: track_to_response(track), status: :created
+    if PlaylistTrack.where(playlist_id: @playlist.id, track_id: track.id).count == 0
+      PlaylistTrack.create(playlist_id: @playlist.id, track_id: track.id)
+      render json: { message: "Ok", status: 1 }, status: 200
+    else
+      render json: { message: "Track already in playlist", status: 2 }, status: 200
+    end
   end
 
   def remove_track

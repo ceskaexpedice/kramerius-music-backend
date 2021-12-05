@@ -29,8 +29,12 @@ class Processes
                 album['keywords'].each do |genre|
                     if genre == "rocková hudba"
                         genre = "rock"
-                    elsif !["populární hudbapopulární písně", "populární hudba", "populární písně"].index(genre).nil?
+                    elsif !["folková hudba", "folkové písně"].index(genre).nil?
+                        genre = "folk"
+                    elsif !["populární hudbapopulární písně", "populární hudba", "populární písně", "pop-rockpopulární hudbapopulární písně"].index(genre).nil?
                         genre = "pop"
+                    elsif !["punkrocková hudba", "punk (hudba)"].index(genre).nil?
+                        genre = "punk"
                     elsif !["country hudba", "country music"].index(genre).nil?
                         genre = "country"
                     end

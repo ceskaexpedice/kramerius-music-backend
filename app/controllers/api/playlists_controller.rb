@@ -66,6 +66,7 @@ class Api::PlaylistsController < Api::ApiController
 
     def set_playlist
       @playlist = Playlist.find_by(uid: params[:id])
+      render status: 403, json: { message: "Forbidden" } if @playlist.user != current_user
     end  
 
     def to_response(playlist, detail = false)

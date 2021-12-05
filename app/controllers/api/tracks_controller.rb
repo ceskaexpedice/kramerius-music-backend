@@ -12,13 +12,22 @@ class Api::TracksController < Api::ApiController
   def search
     results = []
     q = params[:query]
-    limit = params[:limit] || 30
+    limit = (params[:limit] || 30).to_i
     tracks = Track.where("title ILIKE ?", "%#{q}%")
     if params[:accessibility] == "public"
       tracks = tracks.where(is_private: false)
     end
     tracks.limit(limit).each do |track|
       results.push to_response(track)
+    end
+    if results.count < limit
+      tracks = Track.where("unit ILIKE ?", "%#{q}%")
+      if params[:accessibility] == "public"
+        tracks = tracks.where(is_private: false)
+      end
+      tracks.limit(limit - results.count).each do |track|
+        results.push to_response(track)
+      end
     end
     render json: results, status: :ok 
   end

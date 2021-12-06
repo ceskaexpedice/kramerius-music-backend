@@ -13,7 +13,7 @@ class Processes
         end
     end
 
-    def self.renew_data(source)
+    def self.renew_data(source, with_tracks = true)
         url = "#{Processes.source_url(source)}/search/api/v5.0/search?q=*:*&fq=fedora.model:soundrecording&fl=PID,dostupnost,dc.creator,keywords,dc.title,datum_str&rows=3000&start=0"
         albums = Processes.get(url)
         albumMap = {}
@@ -23,7 +23,6 @@ class Processes
             a = c.count > 0 ? c.first : Album.new
             a.pid = album['PID']
             a.title = album['dc.title']
-
             genres = []
             unless album['keywords'].nil? 
                 album['keywords'].each do |genre|
@@ -67,7 +66,7 @@ class Processes
             a.save
             albumMap[a.pid] = a
         end
-
+        return unless with_tracks
         url = "#{Processes.source_url(source)}/search/api/v5.0/search?q=*:*&fq=fedora.model:soundunit&fl=PID,dc.title&rows=3000&start=0"
         units = Processes.get(url)
         unitMap = {}
@@ -90,11 +89,8 @@ class Processes
                 c = Track.where("pid='#{pid}' AND source='#{source}'")
                 t = c.count > 0 ? c.first : Track.new
                 sri = track['model_path'][0].split("/").index("soundrecording")
-                puts "sri #{sri}"
                 next if sri.nil?
                 album_pid = track['pid_path'][0].split("/")[sri]
-                puts "album_pid #{album_pid}"
-
                 sui = track['model_path'][0].split("/").index("soundunit")
                 unless sui.nil?
                     unit_pid = track['pid_path'][0].split("/")[sui]
@@ -102,7 +98,6 @@ class Processes
                     t.unit = unit unless unit.nil?
                 end
                 album = albumMap[album_pid]
-                puts "album - {album}"
                 next if album.nil?
                 t.album = album
                 t.pid = track['PID']

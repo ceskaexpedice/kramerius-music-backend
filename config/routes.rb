@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       end
     end
 
+    get 'embed/:pid', to: 'embed#show'
 
     get 'library/albums', to: 'library#albums'
     post 'library/albums/:album_id', to: 'library#add_album'

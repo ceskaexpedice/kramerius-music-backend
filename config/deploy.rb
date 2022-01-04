@@ -1,6 +1,6 @@
 lock '3.6.1'
 set :application, 'kramerius-music'
-set :repo_url, 'git@github.com:honza-rychtar/kramerius-music-backend.git'
+set :repo_url, 'git@github.com:ceskaexpedice/kramerius-music-backend.git'
 set :passenger_restart_with_touch, true
 set :deploy_to, '/home/deploy/kramerius-music'
 append :linked_files, 'config/database.yml', 'config/secrets.yml', 'config/application.yml'
